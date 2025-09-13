@@ -1,11 +1,9 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import './index.css';
-import App from './App';
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import "./index.css";
+import App from "./App";
 // import { ClerkProvider } from '@clerk/clerk-react'
 import { AnilistAuthProvider } from "./AnilistContext";
-
 
 // const clerkKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 // if (!clerkKey) {
@@ -13,21 +11,16 @@ import { AnilistAuthProvider } from "./AnilistContext";
 // }
 
 if (import.meta.env.PROD) {
-  console.log = () => { };
+  console.log = () => {};
 }
 
-
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-    {/* <ClerkProvider publishableKey={clerkKey}> */}
-      <AnilistAuthProvider storageKey='anilist_user'>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </AnilistAuthProvider>
-    {/* </ClerkProvider> */}
-  </React.StrictMode>
+  <AnilistAuthProvider storageKey="anilist_user">
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </AnilistAuthProvider>
 );

@@ -133,13 +133,13 @@ export const getCurrentEpisodeData = async (
       sources: {
         sub: subData.data.sources[0].url.replace(
           /https?:\/\/d([a-z]).netmagcdn.com:2228\/hls-playback/,
-          "/api-aa"
+          "/api-$1"
         ),
         dub:
           dubData && dubData.data
             ? dubData?.data.sources[0].url.replace(
                 /https?:\/\/d([a-z]).netmagcdn.com:2228\/hls-playback/,
-                "/api-aa"
+                "/api-$1"
               )
             : null,
       },

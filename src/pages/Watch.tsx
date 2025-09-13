@@ -61,7 +61,7 @@ export const Watch: React.FC = () => {
     if (forceRefetch)
       console.log("Refetching current episode", currentEpisodeNumber);
     const epId = animeData.episodes[currentEpisodeNumber - 1].id
-    const epData = await getCurrentEpisodeData(epId, animeData.hasDub, forceRefetch)
+    const epData = await getCurrentEpisodeData(epId, animeData.hasDub, true)
     setCurrentEpisode(epData);
 
     if (currentEpisodeNumber < animeData.episodes.length)

@@ -1,6 +1,7 @@
 import { CurrEpisodeData } from "../interfaces/CurrEpisodeData";
 import { consumetZoro } from "./LoadBalancer";
 import * as Realm from "realm-web";
+import axios from "axios";
 
 // Initialize MongoDB
 const initialiazeMongo = async () => {
@@ -64,10 +65,16 @@ export const getCurrentEpisodeData = async (
     return episodeCache[id]; // Return cached data
   }
 
+  // Helper function for YumaAPI
+  const yumaZoro = async (query: string) => {
+    const url = `https://yumaapi.vercel.app/${query}`;
+    return await axios.get(url);
+  };
+
   // Original logic to fetch sub and dub episode data
-  const subResponse = consumetZoro(`watch?episodeId=${id}`);
+  const subResponse = yumaZoro(`watch?episodeId=${id}`);
   const dubResponse = hasDub
-    ? consumetZoro(`watch?episodeId=${id.replace(/(\$both|\$sub)$/, "$dub")}`)
+    ? yumaZoro(`watch?episodeId=${id.replace(/(\$both|\$sub)$/, "$dub")}`)
     : null;
 
   const results = await Promise.allSettled([subResponse, dubResponse]);
@@ -81,7 +88,7 @@ export const getCurrentEpisodeData = async (
     const newId = id.includes("$both")
       ? id.replace("$both", "$sub")
       : id.replace("$sub", "$both");
-    subData = await consumetZoro(`watch?episodeId=${newId}`);
+    subData = await yumaZoro(`watch?episodeId=${newId}`);
   }
 
   if (!subData && !dubData) {
@@ -93,29 +100,29 @@ export const getCurrentEpisodeData = async (
       .subtitles
       ? subData.data.subtitles.find(
           (sub: { url: string; lang: string }) =>
-            sub.lang.toLowerCase() === "thumbnails"
+            sub.lang && sub.lang.toLowerCase() === "thumbnails"
         )
       : null;
     const dubThumbSrcObj: { url: string; lang: string } | null =
       dubData && dubData.data && dubData.data.subtitles
-        ? subData.data.subtitles.find(
+        ? dubData.data.subtitles.find(
             (sub: { url: string; lang: string }) =>
-              sub.lang.toLowerCase() === "thumbnails"
+              sub.lang && sub.lang.toLowerCase() === "thumbnails"
           )
         : null;
     const subtitlesList: { url: string; lang: string }[] | null = subData.data
       .subtitles
       ? subData.data.subtitles.filter(
           (sub: { url: string; lang: string }) =>
-            sub.lang.toLowerCase() !== "thumbnails"
+            sub.lang && sub.lang.toLowerCase() !== "thumbnails"
         )
       : null;
 
-    const dubSubtitlesList: { url: string; lang: string }[] | null = dubData?.data
-      .subtitles
-      ? subData.data.subtitles.filter(
+    const dubSubtitlesList: { url: string; lang: string }[] | null = dubData
+      ?.data.subtitles
+      ? dubData.data.subtitles.filter(
           (sub: { url: string; lang: string }) =>
-            sub.lang.toLowerCase() !== "thumbnails"
+            sub.lang && sub.lang.toLowerCase() !== "thumbnails"
         )
       : null;
 
@@ -125,33 +132,38 @@ export const getCurrentEpisodeData = async (
       outro: subData.data.outro,
       sources: {
         sub: subData.data.sources[0].url.replace(
-          /https?:\/\/e([abcdef]).netmagcdn.com:2228\/hls-playback/,
-          "/api-$1"
+          /https?:\/\/d([a-z]).netmagcdn.com:2228\/hls-playback/,
+          "/api-aa"
         ),
         dub:
           dubData && dubData.data
             ? dubData?.data.sources[0].url.replace(
-                /https?:\/\/e([abcdef]).netmagcdn.com:2228\/hls-playback/,
-                "/api-$1"
+                /https?:\/\/d([a-z]).netmagcdn.com:2228\/hls-playback/,
+                "/api-aa"
               )
             : null,
       },
       thumbnailSrc: thumbSrcObj?.url.replace(
-        "https://s.megastatics.com/thumbnails",
+        "https://mgstatics.xyz/thumbnails", // Updated domain
         "/api-thumb"
       ),
       dubThumbnailSrc: dubThumbSrcObj?.url.replace(
-        "https://s.megastatics.com/thumbnails",
+        "https://mgstatics.xyz/thumbnails", // Updated domain
         "/api-thumb"
       ),
-      subtitles: subtitlesList?.map((sub: {url:string,lang:string}) => ({
-        url: sub.url.replace("https://s.megastatics.com/subtitle", "/api-sub"),
+      subtitles: subtitlesList?.map((sub: { url: string; lang: string }) => ({
+        url: sub.url.replace("https://mgstatics.xyz/subtitle", "/api-sub"), // Updated domain
         lang: sub.lang,
       })),
-      dubSubtitles: dubSubtitlesList?.map((sub:{url:string,lang:string}) =>({
-        url: sub.url.replace("https://s.megastatics.com/subtitle", "/api-sub"),
-        lang: sub.lang,
-      }))
+      dubSubtitles: dubSubtitlesList?.map(
+        (sub: { url: string; lang: string }) => ({
+          url: sub.url.replace(
+            "https://mgstatics.xyz/subtitle", // Updated domain
+            "/api-sub"
+          ),
+          lang: sub.lang,
+        })
+      ),
     };
 
     // Remove duplicate subtitles

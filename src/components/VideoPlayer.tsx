@@ -132,16 +132,21 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   ]);
 
   const loadSkipButton: boolean =
-    (currentTime > currentEpisode.intro.start &&
-      currentTime < currentEpisode.intro.end) ||
-    (currentTime > currentEpisode.outro.start &&
-      currentTime < currentEpisode.outro.end);
+    currentEpisode?.intro && currentEpisode?.outro
+      ? (currentTime > currentEpisode.intro.start &&
+        currentTime < currentEpisode.intro.end) ||
+      (currentTime > currentEpisode.outro.start &&
+        currentTime < currentEpisode.outro.end)
+      : false;
 
   const skipText: string =
-    currentTime > currentEpisode.intro.start &&
+    currentEpisode?.intro && currentTime > currentEpisode.intro.start &&
       currentTime < currentEpisode.intro.end
       ? "Skip Intro"
-      : "Skip Outro";
+      : currentEpisode?.outro && currentTime > currentEpisode.outro.start &&
+        currentTime < currentEpisode.outro.end
+        ? "Skip Outro"
+        : "";
 
   const handleSkip = () => {
     if (

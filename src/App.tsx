@@ -5,7 +5,7 @@ import LandingPage from "./pages/landingPage";
 import { Anime } from "./pages/Anime";
 import { Watch } from "./pages/Watch";
 import { Search } from "./pages/Search";
-// import Manga from "./pages/Manga";
+import Manga from "./pages/Manga";
 // import Read from "./pages/Read";
 import { useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -54,7 +54,7 @@ const App = () => {
         <Route path="/watch/:id" element={<Watch />} />
         <Route path="/news" element={<AnimeNewsSection />} />
         <Route path="/user" element={<User />} />
-        {/* <Route path="/manga" element={<Manga />} /> */}
+        <Route path="/manga" element={<Manga />} />
         {/* <Route path="/read/:mangaName" element={<Read />} /> */}
         {/* <Route path= "/watch/:id" element={<Watchgogo/>}/> */}
       </Routes>

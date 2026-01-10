@@ -1,17 +1,8 @@
+//TODO: Refactor MongoDB dependency | Atlas App Services and Device Sync have retired
+
 import { CurrEpisodeData } from "../interfaces/CurrEpisodeData";
 import { consumetZoro } from "./LoadBalancer";
-import * as Realm from "realm-web";
 import axios from "axios";
-
-// Initialize MongoDB
-const initialiazeMongo = async () => {
-  const app = new Realm.App({ id: "application-0-lrdgzin" });
-  const user = await app.logIn(
-    Realm.Credentials.apiKey(import.meta.env.VITE_MONGO_API_KEY)
-  );
-  return user.mongoClient("mongodb-atlas");
-};
-const mongo = initialiazeMongo();
 
 // Helper functions for caching
 const getCachedData = (cacheKey: string) => {
@@ -23,29 +14,28 @@ const setCachedData = (cacheKey: string, cacheData: any) => {
   sessionStorage.setItem(cacheKey, JSON.stringify(cacheData));
 };
 
-// Function to get anime data with caching
+// Function to get anime data with caching (no MongoDB)
 export const getAnimeData = async (
   malId: number,
   name: string,
-  forceRefresh = false // Add forceRefresh flag
+  forceRefresh = false
 ): Promise<AnimeWatchData> => {
   const cacheKey = `animeCache`;
-  const animeCache = getCachedData(cacheKey); // Retrieve anime cache object
+  const animeCache = getCachedData(cacheKey);
 
-  // Check if cached data exists and forceRefresh is false
   if (!forceRefresh && animeCache[malId]) {
     console.log("Returning cached anime data for malId:", malId);
-    return animeCache[malId]; // Return cached data
+    return animeCache[malId];
   }
 
-  const zoroId = await getZoroId(malId, name);
+  // Search for zoroId directly without MongoDB
+  const zoroId = await searchZoroId(malId, name);
 
   const response = await consumetZoro(`info?id=${zoroId}`);
   const animeResponse: AnimeWatchData = response.data;
 
-  // Update the cache with new data
   animeCache[malId] = animeResponse;
-  setCachedData(cacheKey, animeCache); // Store the updated animeCache
+  setCachedData(cacheKey, animeCache);
 
   return animeResponse;
 };
@@ -54,15 +44,14 @@ export const getAnimeData = async (
 export const getCurrentEpisodeData = async (
   id: string,
   hasDub: boolean,
-  forceRefresh = false // Add forceRefresh flag
+  forceRefresh = false
 ): Promise<CurrEpisodeData> => {
   const cacheKey = `episodeCache`;
-  const episodeCache = getCachedData(cacheKey); // Retrieve episode cache object
+  const episodeCache = getCachedData(cacheKey);
 
-  // Check if cached data exists and forceRefresh is false
   if (!forceRefresh && episodeCache[id]) {
     console.log("Returning cached episode data for id:", id);
-    return episodeCache[id]; // Return cached data
+    return episodeCache[id];
   }
 
   // Helper function for YumaAPI
@@ -71,7 +60,6 @@ export const getCurrentEpisodeData = async (
     return await axios.get(url);
   };
 
-  // Original logic to fetch sub and dub episode data
   const subResponse = yumaZoro(`watch?episodeId=${id}`);
   const dubResponse = hasDub
     ? yumaZoro(`watch?episodeId=${id.replace(/(\$both|\$sub)$/, "$dub")}`)
@@ -144,29 +132,25 @@ export const getCurrentEpisodeData = async (
             : null,
       },
       thumbnailSrc: thumbSrcObj?.url.replace(
-        "https://mgstatics.xyz/thumbnails", // Updated domain
+        "https://mgstatics.xyz/thumbnails",
         "/api-thumb"
       ),
       dubThumbnailSrc: dubThumbSrcObj?.url.replace(
-        "https://mgstatics.xyz/thumbnails", // Updated domain
+        "https://mgstatics.xyz/thumbnails",
         "/api-thumb"
       ),
       subtitles: subtitlesList?.map((sub: { url: string; lang: string }) => ({
-        url: sub.url.replace("https://mgstatics.xyz/subtitle", "/api-sub"), // Updated domain
+        url: sub.url.replace("https://mgstatics.xyz/subtitle", "/api-sub"),
         lang: sub.lang,
       })),
       dubSubtitles: dubSubtitlesList?.map(
         (sub: { url: string; lang: string }) => ({
-          url: sub.url.replace(
-            "https://mgstatics.xyz/subtitle", // Updated domain
-            "/api-sub"
-          ),
+          url: sub.url.replace("https://mgstatics.xyz/subtitle", "/api-sub"),
           lang: sub.lang,
         })
       ),
     };
 
-    // Remove duplicate subtitles
     if (episodeData.subtitles) {
       episodeData.subtitles = episodeData.subtitles.filter(
         (sub, index, self) =>
@@ -177,9 +161,8 @@ export const getCurrentEpisodeData = async (
       (sub, index, self) => index === self.findIndex((t) => t.lang === sub.lang)
     );
 
-    // Update the cache with new data
     episodeCache[id] = episodeData;
-    setCachedData(cacheKey, episodeCache); // Store the updated episodeCache
+    setCachedData(cacheKey, episodeCache);
 
     return episodeData;
   }
@@ -187,47 +170,16 @@ export const getCurrentEpisodeData = async (
   throw new Error("Sub data not found, Dubdata found");
 };
 
-// Function to get Zoro ID from MongoDB or search for it
-const getZoroId = async (malId: number, name: string): Promise<string> => {
-  const anime = await (await mongo)
-    .db("Zoro")
-    .collection("mappings")
-    .findOne({ mal_id: malId });
-
-  if (!anime) {
-    return searchZoroId(malId, name);
-  }
-  return anime.zoro_id;
-};
-
-// Function to search for Zoro ID and store it in MongoDB
+// Search for Zoro ID directly (no MongoDB)
 const searchZoroId = async (malId: number, name: string): Promise<string> => {
   const animeResponses: any = (await consumetZoro(name)).data.results;
-  console.log(name);
+  console.log("Searching for:", name);
+
   for (let i = 0; i < animeResponses.length; i++) {
     const anime = animeResponses[i];
-
     const response = await consumetZoro(`info?id=${anime.id}`);
 
     if (response.data.malID == malId) {
-      const newAnime: mongoAnime = {
-        mal_id: response.data.malID,
-        al_id: response.data.alID,
-        zoro_id: response.data.id,
-      };
-
-      const databaseAnime = await (await mongo)
-        .db("Zoro")
-        .collection("mappings")
-        .findOne({ mal_id: response.data.malID });
-
-      if (!databaseAnime) {
-        console.log("Inserting new anime into database", newAnime);
-        await (await mongo)
-          .db("Zoro")
-          .collection("mappings")
-          .insertOne(newAnime);
-      }
       return response.data.id;
     }
   }
@@ -251,10 +203,4 @@ interface Episode {
   id: string;
   number: number;
   title: string;
-}
-
-interface mongoAnime {
-  mal_id: number;
-  al_id: number;
-  zoro_id: string;
 }

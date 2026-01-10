@@ -22,9 +22,9 @@ const AnimeNewsSection = () => {
     useEffect(() => {
         async function fetchNews() {
             try {
-                const response = await fetch(
-                    "https://consumet-deploy.vercel.app/news/ann/recent-feeds"
-                )
+                const endpoints = import.meta.env.VITE_CONSUMET_API_ENDPOINTS.split(",");
+                const baseUrl = endpoints[0].trim();
+                const response = await fetch(`${baseUrl}/news/ann/recent-feeds`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`)
                 }
@@ -95,7 +95,7 @@ const AnimeNewsSection = () => {
                         </div>
                         <div className="card-footer p-4 bg-doki-dark-grey rounded-b-lg flex justify-between items-center">
                             <p className="text-md font-hpSimplifiedbold text-doki-white">
-                                {new Date(item.uploadedAt).toLocaleDateString()}
+                                {item.uploadedAt}
                             </p>
                             <a
                                 href={item.url}

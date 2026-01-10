@@ -1,41 +1,181 @@
 [[redirects]]
   from = "/api-a/*"
-  to = "https://ea.netmagcdn.com:2228/hls-playback/:splat"
+  to = "https://da.netmagcdn.com:2228/hls-playback/:splat"
   status = 200
   force = true
   headers = {X-From = "Netlify"}
 
 [[redirects]]
   from = "/api-b/*"
-  to = "https://eb.netmagcdn.com:2228/hls-playback/:splat"
+  to = "https://db.netmagcdn.com:2228/hls-playback/:splat"
   status = 200
   force = true
   headers = {X-From = "Netlify"}
 
 [[redirects]]
   from = "/api-c/*"
-  to = "https://ec.netmagcdn.com:2228/hls-playback/:splat"
+  to = "https://dc.netmagcdn.com:2228/hls-playback/:splat"
   status = 200
   force = true
   headers = {X-From = "Netlify"}
 
 [[redirects]]
   from = "/api-d/*"
-  to = "https://ed.netmagcdn.com:2228/hls-playback/:splat"
+  to = "https://dd.netmagcdn.com:2228/hls-playback/:splat"
   status = 200
   force = true
   headers = {X-From = "Netlify"}
 
 [[redirects]]
   from = "/api-e/*"
-  to = "https://ee.netmagcdn.com:2228/hls-playback/:splat"
+  to = "https://de.netmagcdn.com:2228/hls-playback/:splat"
   status = 200
   force = true
   headers = {X-From = "Netlify"}
 
 [[redirects]]
   from = "/api-f/*"
-  to = "https://ef.netmagcdn.com:2228/hls-playback/:splat"
+  to = "https://df.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-g/*"
+  to = "https://dg.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-h/*"
+  to = "https://dh.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-i/*"
+  to = "https://di.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-j/*"
+  to = "https://dj.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-k/*"
+  to = "https://dk.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-l/*"
+  to = "https://dl.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-m/*"
+  to = "https://dm.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-n/*"
+  to = "https://dn.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-o/*"
+  to = "https://do.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-p/*"
+  to = "https://dp.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-q/*"
+  to = "https://dq.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-r/*"
+  to = "https://dr.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-s/*"
+  to = "https://ds.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-t/*"
+  to = "https://dt.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-u/*"
+  to = "https://du.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-v/*"
+  to = "https://dv.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-w/*"
+  to = "https://dw.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-x/*"
+  to = "https://dx.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-y/*"
+  to = "https://dy.netmagcdn.com:2228/hls-playback/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
+
+[[redirects]]
+  from = "/api-z/*"
+  to = "https://dz.netmagcdn.com:2228/hls-playback/:splat"
   status = 200
   force = true
   headers = {X-From = "Netlify"}
@@ -55,6 +195,6 @@
   headers = {X-From = "Netlify"}
 
 [[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
+  from = "/*"
+  to = "/index.html"
+  status = 200
